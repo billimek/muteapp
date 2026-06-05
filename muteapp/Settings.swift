@@ -10,6 +10,7 @@ struct Settings {
     private static let uidKey = "targetDeviceUID"
     private static let restoreLevelsKey = "restoreLevelsByUID"
     private static let hudKey = "hudEnabled"
+    private static let soundKey = "soundEnabled"
 
     static var hudEnabled: Bool {
         get {
@@ -17,6 +18,12 @@ struct Settings {
             return UserDefaults.standard.bool(forKey: hudKey)
         }
         set { UserDefaults.standard.set(newValue, forKey: hudKey) }
+    }
+
+    // Whether a sound effect plays when the microphone is muted or unmuted. Defaults to `false`.
+    static var soundEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: soundKey) }
+        set { UserDefaults.standard.set(newValue, forKey: soundKey) }
     }
 
     static var targetMode: TargetMode {

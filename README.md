@@ -9,6 +9,7 @@ Tiny native macOS menu-bar app that toggles your microphone with a global hotkey
 - Global hotkey (default ⌃⌥⌘M, configurable)
 - Menu-bar icon turns red when muted
 - On-screen HUD that flashes briefly when you toggle
+- Optional sound effects on mute/unmute (off by default)
 - Mutify-inspired popover with live input-level meter, device picker, and inline settings
 - Per-device targeting — control a specific mic, or always follow whatever's the system default
 - Launch at login
@@ -73,8 +74,9 @@ Then create a GitHub Release and attach the zip.
 | `PopoverController.swift` | `NSPopover` host. |
 | `LevelMeter.swift` | `AVAudioEngine` input tap → smoothed RMS for the meter. |
 | `HUDController.swift` | Borderless `NSPanel` that flashes the muted/live glyph centered on screen. |
+| `SoundController.swift` | Plays bundled `Resources/Sounds/{mute,unmute}.wav` on mute change when sound effects are enabled. |
 | `Theme.swift` | Gradient colors, accents. |
-| `Settings.swift` | UserDefaults-backed prefs (target mode, device UID, restore levels, HUD enabled). |
+| `Settings.swift` | UserDefaults-backed prefs (target mode, device UID, restore levels, HUD enabled, sound enabled). |
 
 Mute primitive prefers `kAudioDevicePropertyMute` on the input scope; for devices that don't expose it (some USB mics), the app drives `kAudioDevicePropertyVolumeScalar` to 0 and restores the prior level on unmute.
 

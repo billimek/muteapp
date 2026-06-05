@@ -34,8 +34,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func handleMuteChanged() {
+        let muted = AudioController.shared.currentMuted()
         refreshIcon()
-        HUDController.shared.flash(muted: AudioController.shared.currentMuted())
+        HUDController.shared.flash(muted: muted)
+        SoundController.shared.play(muted: muted)
     }
 
     // MARK: Click handling

@@ -9,6 +9,7 @@ final class PopoverModel: ObservableObject {
     @Published var targetMode: TargetMode = .followDefault
     @Published var targetUID: String? = nil
     @Published var hudEnabled: Bool = Settings.hudEnabled
+    @Published var soundEnabled: Bool = Settings.soundEnabled
     @Published var launchAtLogin: Bool = (SMAppService.mainApp.status == .enabled)
 
     private var observers: [NSObjectProtocol] = []
@@ -42,6 +43,7 @@ final class PopoverModel: ObservableObject {
         targetMode = Settings.targetMode
         targetUID = Settings.targetDeviceUID
         hudEnabled = Settings.hudEnabled
+        soundEnabled = Settings.soundEnabled
         launchAtLogin = (SMAppService.mainApp.status == .enabled)
     }
 
@@ -68,6 +70,12 @@ final class PopoverModel: ObservableObject {
     func setHUDEnabled(_ value: Bool) {
         Settings.hudEnabled = value
         hudEnabled = value
+    }
+
+    // Persists and reflects the sound-effects preference.
+    func setSoundEnabled(_ value: Bool) {
+        Settings.soundEnabled = value
+        soundEnabled = value
     }
 
     func setLaunchAtLogin(_ value: Bool) {
@@ -282,6 +290,17 @@ private struct SettingsRows: View {
                 isOn: Binding(
                     get: { model.hudEnabled },
                     set: { model.setHUDEnabled($0) }
+                )
+            )
+
+            Divider().background(Theme.stroke)
+
+            ToggleRow(
+                icon: "speaker.wave.2.fill",
+                title: "Play sound effects",
+                isOn: Binding(
+                    get: { model.soundEnabled },
+                    set: { model.setSoundEnabled($0) }
                 )
             )
 
