@@ -276,6 +276,22 @@ private struct SettingsRows: View {
 
             Divider().background(Theme.stroke)
 
+            HStack {
+                Image(systemName: "mic.badge.plus")
+                    .frame(width: 18)
+                    .foregroundStyle(Theme.textSecondary)
+                Text("Push to talk")
+                    .font(.system(size: 13))
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                KeyboardShortcuts.Recorder(for: .pushToTalk)
+                    .controlSize(.small)
+            }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 12)
+
+            Divider().background(Theme.stroke)
+
             ToggleRow(
                 icon: "rectangle.center.inset.filled",
                 title: "Show on-screen HUD",

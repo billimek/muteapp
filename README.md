@@ -7,6 +7,7 @@
 Tiny native macOS menu-bar app that toggles your microphone with a global hotkey. A free, Apple-Silicon-native replacement for the abandoned [mutekey](https://github.com/cdzombak/mutekey).
 
 - Global hotkey (default ⌃⌥⌘M, configurable)
+- Optional push-to-talk hotkey — hold to go live, release to mute (active whenever a key is assigned)
 - Menu-bar icon turns red when muted
 - On-screen HUD that flashes briefly when you toggle
 - Mutify-inspired popover with live input-level meter, device picker, and inline settings
@@ -68,7 +69,7 @@ Then create a GitHub Release and attach the zip.
 | `main.swift` | Entry point — sets `.accessory` activation policy, runs `NSApplication`. |
 | `AppDelegate.swift` | `NSStatusItem`, left/right click split, HUD on mute change. |
 | `AudioController.swift` | CoreAudio: mute property, volume fallback, device enumeration, listeners. |
-| `HotkeyController.swift` | `KeyboardShortcuts` global hotkey → `AudioController.toggle()`. |
+| `HotkeyController.swift` | `KeyboardShortcuts` global hotkeys: toggle → `AudioController.toggle()`; push-to-talk (hold) → unmute on key-down, mute on key-up. |
 | `PopoverView.swift` | SwiftUI popover (mic glyph, level meter, device list, inline settings). |
 | `PopoverController.swift` | `NSPopover` host. |
 | `LevelMeter.swift` | `AVAudioEngine` input tap → smoothed RMS for the meter. |

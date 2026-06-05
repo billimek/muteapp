@@ -40,6 +40,20 @@ final class AudioController {
         return isMuted(id) ?? false
     }
 
+    // Forces the target device to the given mute state and notifies observers.
+    //
+    // Unlike ``toggle()`` this sets an absolute state, which is what the
+    // push-to-talk handlers need (unmute on key down, mute on key up).
+    // - Parameter muted: `true` to mute the target device, `false` to unmute.
+    func setMutedState(_ muted: Bool) {
+        guard let id = resolveTargetDeviceID() else {
+            NSLog("muteapp: no target device resolvable")
+            return
+        }
+        setMuted(id, muted)
+        NotificationCenter.default.post(name: .muteStateChanged, object: nil)
+    }
+
     func listInputDevices() -> [InputDevice] {
         var size: UInt32 = 0
         var addr = AudioObjectPropertyAddress(
