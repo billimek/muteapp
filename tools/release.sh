@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds Release, zips muteapp.app, prints SHA256.
+# Builds Release, ad-hoc signs, verifies the signature, zips muteapp.app, prints SHA256.
 # Usage: tools/release.sh
 set -euo pipefail
 
@@ -14,12 +14,14 @@ xcodebuild \
     -configuration Release \
     -derivedDataPath build \
     CODE_SIGN_IDENTITY=- \
-    CODE_SIGNING_REQUIRED=NO \
-    CODE_SIGNING_ALLOWED=NO \
     build >/dev/null
 
 APP="build/Build/Products/Release/muteapp.app"
 [[ -d "$APP" ]] || { echo "Build did not produce $APP"; exit 1; }
+
+# A linker-only signature over the Mach-O is not enough; macOS rejects the bundle as damaged.
+[[ -d "$APP/Contents/_CodeSignature" ]] || { echo "Bundle is not signed: $APP/Contents/_CodeSignature missing"; exit 1; }
+codesign --verify --deep --strict --verbose=2 "$APP"
 
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$APP/Contents/Info.plist")
 ZIP="dist/muteapp-$VERSION.zip"
