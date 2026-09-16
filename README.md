@@ -9,7 +9,7 @@ Tiny native macOS menu-bar app that toggles your microphone with a global hotkey
 - Global hotkey (default ⌃⌥⌘M, configurable)
 - Menu-bar icon turns red when muted
 - On-screen HUD that flashes briefly when you toggle
-- Mutify-inspired popover with live input-level meter, device picker, and inline settings
+- Mutify-inspired popover with device picker and inline settings
 - Per-device targeting — control a specific mic, or always follow whatever's the system default
 - Launch at login
 
@@ -36,21 +36,22 @@ A microphone icon appears in the menu bar. Left-click to open the popover, right
 
 ## Running someone else's prebuilt copy
 
-Because this isn't notarized (no $99/yr Developer Program), Gatekeeper will refuse to launch a downloaded `.zip` build with the usual *"unidentified developer"* dialog. You have two options:
+Release builds are ad-hoc signed but not notarized (no $99/yr Developer Program), so Gatekeeper blocks a downloaded `.zip` with *"Apple could not verify..."* or *"unidentified developer"*. Clear the quarantine attribute:
 
 ```fish
-# right-click → Open is the click-through path (works once)
-open /Applications/muteapp.app
-
-# or drop the quarantine attribute up front
 xattr -dr com.apple.quarantine /Applications/muteapp.app
+open /Applications/muteapp.app
 ```
+
+The GUI equivalent is System Settings → Privacy & Security → scroll down → **Open Anyway**. On macOS 15 Sequoia and later, right-click → Open no longer bypasses this.
 
 This is a one-time step per install. Building locally from source avoids it entirely.
 
+A different error, *"muteapp is damaged and can't be opened"*, means the bundle's signature is invalid rather than merely unnotarized — no user-side workaround applies. The v1.0 zip shipped in that state; use a later release.
+
 ## Why no Sparkle?
 
-Sparkle handles "new version available, download and install" cleanly, but it doesn't fix Gatekeeper for an unsigned/free-cert app — downloaders still need the right-click→Open dance. For a personal tool the cost of adding Sparkle outweighs the benefit. Instead the popover footer has a *Check for Updates* link that opens the GitHub Releases page in your browser.
+Sparkle handles "new version available, download and install" cleanly, but it doesn't fix Gatekeeper for an ad-hoc-signed app — downloaders still need to clear the quarantine attribute. For a personal tool the cost of adding Sparkle outweighs the benefit. Instead the popover footer has a *Check for Updates* link that opens the GitHub Releases page in your browser.
 
 ## Cutting a release
 
@@ -69,9 +70,8 @@ Then create a GitHub Release and attach the zip.
 | `AppDelegate.swift` | `NSStatusItem`, left/right click split, HUD on mute change. |
 | `AudioController.swift` | CoreAudio: mute property, volume fallback, device enumeration, listeners. |
 | `HotkeyController.swift` | `KeyboardShortcuts` global hotkey → `AudioController.toggle()`. |
-| `PopoverView.swift` | SwiftUI popover (mic glyph, level meter, device list, inline settings). |
+| `PopoverView.swift` | SwiftUI popover (mic glyph, device list, inline settings). |
 | `PopoverController.swift` | `NSPopover` host. |
-| `LevelMeter.swift` | `AVAudioEngine` input tap → smoothed RMS for the meter. |
 | `HUDController.swift` | Borderless `NSPanel` that flashes the muted/live glyph centered on screen. |
 | `Theme.swift` | Gradient colors, accents. |
 | `Settings.swift` | UserDefaults-backed prefs (target mode, device UID, restore levels, HUD enabled). |
