@@ -7,7 +7,7 @@ options:
 packages:
   KeyboardShortcuts:
     url: https://github.com/sindresorhus/KeyboardShortcuts
-    from: 2.0.0
+    from: 3.1.0
 targets:
   muteapp:
     type: application
@@ -29,6 +29,8 @@ targets:
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: muteapp/muteapp.entitlements
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
         COMBINE_HIDPI_IMAGES: YES
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: muteapp/Info.plist
