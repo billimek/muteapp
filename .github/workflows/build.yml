@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate xcodeproj
+        run: xcodegen generate
+
+      # release.sh builds Release, ad-hoc signs, and fails if the bundle signature is invalid.
+      - name: Build and package
+        run: tools/release.sh
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: muteapp-app
+          path: dist/*.zip
+          if-no-files-found: error
